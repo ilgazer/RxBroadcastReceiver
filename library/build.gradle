@@ -1,12 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
-apply plugin: 'jacoco-android'
-apply from: '../gradle-mvn-push.gradle'
-apply from: '../gradle-mvn-local.gradle'
-
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 14
@@ -21,29 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    jacocoAndroidUnitTestReport {
-        csv.enabled false
-        html.enabled true
-        xml.enabled true
-    }
-
-    testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-            }
-        }
-    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.rxJava2
-    implementation deps.rxAndroid2
-    implementation deps.supportAnnotations
-    testImplementation deps.junit
-    testImplementation deps.robolectric
-    testImplementation deps.mockitoCore
-    testImplementation deps.utilsVerifier
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'org.mockito:mockito-core:3.4.4'
+    testImplementation 'com.github.karczews:utilsverifier:1.0.0'
 }

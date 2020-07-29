@@ -33,10 +33,12 @@ import org.robolectric.annotation.Config;
 
 import java.util.concurrent.Semaphore;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.observers.TestObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -85,7 +87,7 @@ public class RxBroadcastReceiverTest {
     }
 
     @Test
-    public void shouldReturnErrorWhenSubscribeOnNonLooperThread() {
+    public void shouldReturnErrorWhenSubscribeOnNonLooperThread() throws InterruptedException {
         //GIVEN
         final Observable<Intent> observable = RxBroadcastReceivers.fromIntentFilter(application, testIntentFilter)
                 .subscribeOn(Schedulers.newThread());
@@ -94,8 +96,13 @@ public class RxBroadcastReceiverTest {
         final TestObserver<Intent> observer = observable.test();
 
         //THEN
-        observer.awaitTerminalEvent();
-        observer.assertTerminated();
+        observer.await();
+        observer.assertError(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable throwable) {
+                return true;
+            }
+        });
     }
 
     @Test
@@ -148,7 +155,7 @@ public class RxBroadcastReceiverTest {
         final UncaughtExceptionHandler exceptionHandler = new UncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
         final Application applicationSpy = Mockito.spy(RuntimeEnvironment.application);
-        doAnswer(new Answer() {
+        doAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws DeadObjectException {
                 throw new DeadObjectException();

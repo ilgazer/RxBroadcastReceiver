@@ -20,9 +20,9 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
 
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.functions.Cancellable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+import io.reactivex.rxjava3.functions.Cancellable;
 
 class RxBroadcastReceiver implements ObservableOnSubscribe<Intent> {
 

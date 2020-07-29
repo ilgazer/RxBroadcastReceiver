@@ -14,14 +14,14 @@ package com.github.karczews.rxbroadcastreceiver;
 
 import android.os.Looper;
 
-import io.reactivex.Emitter;
+import io.reactivex.rxjava3.core.Emitter;
 
 final class Preconditions {
     private Preconditions() {
         throw new AssertionError("No util class instances for you!");
     }
 
-    static boolean checkLooperThread(final Emitter emitter) {
+    static boolean checkLooperThread(final Emitter<?> emitter) {
         if (Looper.myLooper() == null) {
             emitter.onError(new IllegalStateException("Calling thread is not associated with Looper"));
             return false;
